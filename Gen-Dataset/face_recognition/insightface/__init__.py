@@ -1,0 +1,1 @@
+from insightface_slim.face_model import get_insightface

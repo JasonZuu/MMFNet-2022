@@ -1,0 +1,46 @@
+# python3.8.5
+# -*- coding: utf-8 -*-
+"""
+@File    :   draw_boxs.py
+@Time    :   2021/04/21 18:51:52
+@Author  :   JasonZuu
+@Contact :   zhumingcheng@stu.scu.edu.cn
+"""
+from copy import deepcopy
+import cv2
+import numpy as np
+from DBface import common
+
+def drawbox(image, bboxs, groups, colors, textcolor=(255, 255, 255), thickness=2):
+    """drawbox
+    
+    将输入的图片使用bboxs进行画图，并写字，会对输入的image产生更改。
+    只进行画框，不进行文字标注
+    
+    Args: 
+       image(np.arr): 需要修改的图像
+       bboxs(list): 存放人像信息的数据结构
+       groups(list): #当前帧人脸对应的类
+       N_colors(list): FR_system.N_colors,其中存放类别数量-对应颜色列表，如[3, (0,255,255)]
+       textcolor(tuple): 输出文字颜色 默认值(0,0,0)
+       thickness(int): 框线条粗细
+    
+    Return: 
+    
+    @Author  :   JasonZuu
+    @Time    :   2021/04/17 19:52:55
+    """
+    for i in range(len(bboxs)):
+        if groups[i] == -1: # -1类为认为应该抛弃的人脸图像
+            continue
+        # 框出人脸
+        x, y, r, b = common.intv(bboxs[i].box)
+        color = colors[groups[i]]
+        cv2.rectangle(image, (x, y), (r, b), color, thickness, 4)
+        # 输出文字
+        w = r - x + 1
+        h = b - y + 1
+        border = thickness / 2
+        pos = (x + 3, y - 5)
+        cv2.rectangle(image, common.intv(x - border, y - 21, w + thickness, 21), color, -1, 4)
+        cv2.putText(image, f"person:{groups[i]}", pos, 0, 0.5, textcolor, 1, 16)
