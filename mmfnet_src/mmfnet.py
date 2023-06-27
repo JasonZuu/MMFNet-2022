@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .inception_resnet import InceptionResnet
-from .multi_attention import MultiAttention
+from mmfnet_src.inception_resnet import InceptionResnet
+from mmfnet_src.multi_attention import MultiAttention
 
 
 class MMFNet(nn.Module):
@@ -38,3 +38,11 @@ class MMFNet(nn.Module):
         x = self.attn(x)
         x = self.output_block(x)
         return x
+
+
+if __name__ == "__main__":
+    img = torch.ones(2, 3, 224, 224)
+    x_struc = torch.ones(2, 5)
+    model = MMFNet(num_classes=2)
+    out = model(img, x_struc)
+    print(out)
