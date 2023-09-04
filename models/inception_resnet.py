@@ -1,16 +1,12 @@
 import os
-import requests
-from requests.adapters import HTTPAdapter
-
 import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .download import download_url_to_file
+from utils.download import download_url_to_file
 
 
 class BasicConv2d(nn.Module):
-
     def __init__(self, in_planes, out_planes, kernel_size, stride, padding=0):
         super().__init__()
         self.conv = nn.Conv2d(
@@ -181,7 +177,7 @@ class Mixed_7a(nn.Module):
         return out
 
 
-class InceptionResnet(nn.Module):
+class InceptionResnetV1(nn.Module):
     """Inception Resnet V1 model with optional loading of pretrained weights.
 
     Model parameters can be loaded based on pretraining on the VGGFace2 or CASIA-Webface
@@ -192,22 +188,28 @@ class InceptionResnet(nn.Module):
     Keyword Arguments:
         pretrained {str} -- Optional pretraining dataset. Either 'vggface2' or 'casia-webface'.
             (default: {None})
+        classify {bool} -- Whether the model should output classification probabilities or feature
+            embeddings. (default: {False})
         num_classes {int} -- Number of output classes. If 'pretrained' is set and num_classes not
             equal to that used for the pretrained model, the final linear layer will be randomly
             initialized. (default: {None})
-        dropout_prob {float} -- Dropout probability. (default: {0.5})
+        dropout_prob {float} -- Dropout probability. (default: {0.6})
     """
-    def __init__(self, num_classes=None, pretrained=None, dropout_prob=0.5, device=None):
+    def __init__(self, pretrained=None, classify=False, num_classes=None, dropout_prob=0.6, device=None):
         super().__init__()
 
         # Set simple attributes
         self.pretrained = pretrained
+        self.classify = classify
         self.num_classes = num_classes
 
         if pretrained == 'vggface2':
             tmp_classes = 8631
         elif pretrained == 'casia-webface':
             tmp_classes = 10575
+        elif pretrained is None and self.classify and self.num_classes is None:
+            raise Exception('If "pretrained" is not specified and "classify" is True, "num_classes" must be specified')
+
 
         # Define layers
         self.conv2d_1a = BasicConv2d(3, 32, kernel_size=3, stride=2)
@@ -255,7 +257,8 @@ class InceptionResnet(nn.Module):
             self.logits = nn.Linear(512, tmp_classes)
             load_weights(self, pretrained)
 
-        self.logits = nn.Linear(512, self.num_classes)
+        if self.classify and self.num_classes is not None:
+            self.logits = nn.Linear(512, self.num_classes)
 
         self.device = torch.device('cpu')
         if device is not None:
@@ -288,15 +291,18 @@ class InceptionResnet(nn.Module):
         x = self.dropout(x)
         x = self.last_linear(x.view(x.shape[0], -1))
         x = self.last_bn(x)
-        x = self.logits(x)
+        if self.classify:
+            x = self.logits(x)
+        else:
+            x = F.normalize(x, p=2, dim=1)
         return x
 
 
-def load_weights(mdl, name):
+def load_pretrained_inception_resnet(model, name):
     """Download pretrained state_dict and load into model.
 
     Arguments:
-        mdl {torch.nn.Module} -- Pytorch model.
+        model {torch.nn.Module} -- Pytorch model.
         name {str} -- Name of dataset that was used to generate pretrained state_dict.
 
     Raises:
@@ -317,7 +323,7 @@ def load_weights(mdl, name):
         download_url_to_file(path, cached_file)
 
     state_dict = torch.load(cached_file)
-    mdl.load_state_dict(state_dict)
+    model.load_state_dict(state_dict)
 
 
 def get_torch_home():
