@@ -1,6 +1,6 @@
 from models.vggface.vgg_face import VGGFace
-from models.VGGFace_F import VGGFace_F
-from models.Adaptive_module import Adaptive_module
+from models.vggface_f import VGGFace_F
+from models.modules import Adaptive_module
 from models.Fringe_loss import Fringe_Loss
 import torch
 import torch.optim as optim

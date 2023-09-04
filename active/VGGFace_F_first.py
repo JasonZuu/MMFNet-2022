@@ -1,7 +1,7 @@
-from models.Adaptive_module import Adaptive_module
+from models.modules import Adaptive_module
 from models.vggface.vgg_face import VGGFace
 from models.Fringe_loss import Fringe_Loss
-from models.VGGFace_F import VGGFace_F
+from models.vggface_f import VGGFace_F
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader

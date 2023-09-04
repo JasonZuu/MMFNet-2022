@@ -1,4 +1,4 @@
-from models.baseline_fusion import Struc_emb
+from models.modules import StrucEmb
 import torch 
 import torch.nn as nn
 
@@ -10,7 +10,7 @@ class FaceNet_F(nn.Module):
                         nn.Linear(512, int(out_planes/2)),
                         nn.ReLU(),
         )
-        self.struc_emb = Struc_emb(int(out_planes/2))
+        self.struc_emb = StrucEmb(int(out_planes/2))
     
     def forward(self, X0, X_struc):
         X0 = self.input_scaler(X0)

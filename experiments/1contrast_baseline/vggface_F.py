@@ -12,7 +12,7 @@ from utils.DL_base_ProcSystem import Base_ProcSystem
 import os
 import numpy as np
 from copy import deepcopy
-from models.focal_loss import FocalLoss
+from loss_fn.focal_loss import FocalLoss
 from models.scalers import Struc_emb, clf_metric
 from sklearn.metrics import roc_curve, auc
 import pandas as pd

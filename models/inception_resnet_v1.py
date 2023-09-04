@@ -1,12 +1,7 @@
 import os
-import requests
-from requests.adapters import HTTPAdapter
-
 import torch
 from torch import nn
 from torch.nn import functional as F
-
-from .download import download_url_to_file
 
 
 class BasicConv2d(nn.Module):

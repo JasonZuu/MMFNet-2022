@@ -12,14 +12,14 @@ import torch.nn.functional as F
 
 class FocalLoss(nn.Module):
 
-    def __init__(self, gamma=0, eps=1e-7):
+    def __init__(self, alpha=0.2, gamma=2):
         super(FocalLoss, self).__init__()
         self.gamma = gamma
-        self.eps = eps
+        self.alpha = alpha
         self.ce = F.binary_cross_entropy
 
     def forward(self, input, target):
         logp = self.ce(input, target)
         p = torch.exp(-logp)
-        loss = (1 - p) ** self.gamma * logp
+        loss = (1-self.alpha)*(1 - p) ** self.gamma * logp
         return loss.mean()

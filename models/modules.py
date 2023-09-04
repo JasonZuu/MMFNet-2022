@@ -1,9 +1,30 @@
 import torch 
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.modules.linear import Linear
 
-class Struc_emb(nn.Module):
+
+class Adaptive_module(nn.Module):
+    def __init__(self, in_planes):
+        super().__init__()
+        self.emb = nn.Sequential(
+                        nn.Linear(in_planes,1024),
+                        nn.ReLU(),
+                        nn.Linear(1024,512),
+                        nn.ReLU(),
+                        nn.Linear(512,128),
+                        nn.ReLU()
+                        )
+        self.clf = nn.Linear(128, 2)
+
+    def forward(self, X):
+        X = self.emb(X)
+        X = self.clf(X)
+        output = torch.sigmoid(X)
+        return output
+
+
+
+class StrucEmb(nn.Module):
     def __init__(self, out_planes):
         super().__init__()
         self.scaler = nn.Sequential(
@@ -16,7 +37,8 @@ class Struc_emb(nn.Module):
         out = self.scaler(x_struct)
         return out
 
-class clf_metric(nn.Module):
+
+class ClfMetric(nn.Module):
     def __init__(self):
         super().__init__()
         self.clf = nn.Sequential(

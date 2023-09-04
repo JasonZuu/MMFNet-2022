@@ -1,6 +1,6 @@
 from models.inception_resnet_v1 import InceptionResnetV1
-from models.Adaptive_module import Adaptive_module
-from models.FaceNet_F import FaceNet_F
+from models.modules import Adaptive_module
+from models.facenet_f import FaceNet_F
 from models.Fringe_loss import Fringe_Loss
 import torch
 import torch.optim as optim

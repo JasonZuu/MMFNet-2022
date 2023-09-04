@@ -1,6 +1,6 @@
 import torchvision.models as models
-from models.Adaptive_module import Adaptive_module
-from models.ResNet_F import ResNet_F
+from models.modules import Adaptive_module
+from models.resnet_f import ResNet_F
 from models.Fringe_loss import Fringe_Loss
 import torch
 import torch.optim as optim
