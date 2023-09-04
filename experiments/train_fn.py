@@ -6,48 +6,18 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from torch.optim.lr_scheduler import StepLR
-from utils.DL_load_data import ArcFace_dataset, dl_load_data, split_test_verification
-from utils.DL_base_ProcSystem import Base_ProcSystem
 import os
 import numpy as np
 from copy import deepcopy
+from sklearn.metrics import roc_curve, auc
 
 from models.arcface.backbones import get_model
 from loss_fn.focal_loss import FocalLoss
-from models.scalers import Struc_emb, clf_metric
-from sklearn.metrics import roc_curve, auc
+from models.modules import StrucEmb, ClfMetric
+from utils.DL_load_data import ArcFace_dataset, dl_load_data, split_test_verification
+from utils.DL_base_ProcSystem import Base_ProcSystem
+
 import pandas as pd
-
-BATCH_SIZE = 28
-EPOCHS = 15
-DEBUG_INTERVAL = 300
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
-# DEVICE = "cpu"
-
-
-class ArcFace_F(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.input_scaler = nn.Sequential(
-            nn.ReLU(),
-            nn.Linear(512, 128),
-            nn.ReLU(),
-        )
-        self.struc_emb = Struc_emb(128)
-        self.emb = nn.Sequential(
-            nn.Linear(256, 512),
-            nn.ReLU(),
-            nn.Linear(512, 128),
-            nn.ReLU()
-        )
-
-    def forward(self, X0, X_struc):
-        X0 = self.input_scaler(X0)
-        X1 = self.struc_emb(X_struc)
-        X = torch.cat((X0, X1), axis=1)
-        return X
 
 
 class ArcFace_F_ProcSystem(Base_ProcSystem):

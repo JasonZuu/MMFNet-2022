@@ -1,6 +1,6 @@
 from models.arcface.backbones import get_model
 from models.modules import Adaptive_module
-from models.arcface_f import ArcFace_F
+from models.fusion_models import ArcFace_F
 from models.Fringe_loss import Fringe_Loss
 import torch
 import torch.optim as optim

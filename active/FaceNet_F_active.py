@@ -1,4 +1,4 @@
-from models.inception_resnet_v1 import InceptionResnetV1
+from models.inception_resnet import InceptionResnetV1
 from models.facenet_f import FaceNet_F
 from models.modules import Adaptive_module
 from models.Fringe_loss import Fringe_Loss
