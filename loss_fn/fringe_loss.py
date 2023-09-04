@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class Fringe_Loss(nn.Module):
+class FringeLoss(nn.Module):
     def __init__(self, eps, device):
         super(Fringe_Loss, self).__init__()
         self.eps = eps

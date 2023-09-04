@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class GHMC(nn.Module):
+class GHMCLoss(nn.Module):
     def __init__(self, bins=10, momentum=0, use_sigmoid=True):
         """
         bins: 切成几份计算密度，默认为10
