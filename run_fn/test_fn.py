@@ -42,7 +42,4 @@ def test_fn(model: MMFNet, test_config: MMFNetConfig, test_dataset):
     acc = accuracy_score(y_true=all_labels, y_pred=all_y_pred)
 
     test_result = {"roauc": roauc, "f1": f1, "acc": acc}
-
-    print(f"Testing Results: {test_result}")
-
     return test_result
