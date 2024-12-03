@@ -1,4 +1,4 @@
-# Irrelevant Face Recognition-2022
+# Irrelevant Face Recognition
 
 This is the official pytorch implementation of the paper [Recognizing irrelevant faces in short-form videos based on feature fusion and active learning](https://doi.org/10.1016/j.neucom.2022.06.064)
 
